@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "apl"
+version = "0.1.0"
+description = "Attribute Processing Pipeline - Converts the raw attribute table into processed attribute tabe"
+authors = ["Shreyan Shrijan <shreyan.shrijan@lowes.com>"]
+readme = "README.md"
+packages = [
+    {include = "src"},
+]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+pydantic = "^2.6.3"
+pandas = "^2.2.1"
+pydruid = "^0.6.6"
+sqlalchemy = "^2.0.28"
+hdfs = "^2.7.3"
+pyam = "^0.2.1a0"
+openpyxl = "^3.1.2"
+requests-kerberos = "^0.14.0"
+tenacity = "^8.2.3"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
