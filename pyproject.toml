@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "apl"
+name = "colour_text_to_colour"
 version = "0.1.0"
-description = "Attribute Processing Pipeline - Converts the raw attribute table into processed attribute tabe"
-authors = ["Shreyan Shrijan <shreyan.shrijan@lowes.com>"]
+description = "Colour text to colour prediction model"
+authors = ["Shreyan Shrijan <shreyanshrijan123@gmail.com>"]
 readme = "README.md"
 packages = [
     {include = "src"},
