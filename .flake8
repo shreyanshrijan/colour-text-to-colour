@@ -1,0 +1,16 @@
+[flake8]
+ignore = E114, E116, E133, E266, E302, E402, W503, W504, E731
+max-doc-length = 100
+max-complexity = -1
+max-line-length = 100
+exclude = 
+   __pycache__,
+   .idea,
+   .venv,
+   .vscode,
+   **.egg-info,
+   dist,
+   .local
+per-file-ignores =
+   __init__.py: F401
+   tests/*:E501
