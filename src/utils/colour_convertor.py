@@ -26,25 +26,25 @@ class ColourConverter():
     @staticmethod
     @elementwise
     def hex_to_rgb(h):
-        return tuple(int(h[i:i+2], base=16) for i in (1, 3, 5))
+        return tuple(int(h[i: i + 2], base=16) for i in (1, 3, 5))
 
     @staticmethod
     @elementwise
     def hex_to_lab(h):
         return color.rgb2lab(
-            np.array(ColourConverter.hex_to_rgb(h))[None, None, :]/255
+            np.array(ColourConverter.hex_to_rgb(h))[None, None, :] / 255
         ).flatten()
 
     @staticmethod
     @elementwise
     def lab_to_rgb(lab):
         return tuple(
-                np.around(
-                    color.lab2rgb(
-                        lab[None, None, :]
-                    ).squeeze()*255
-                ).astype(int)
-            )
+            np.around(
+                color.lab2rgb(
+                    lab[None, None, :]
+                ).squeeze() * 255
+            ).astype(int)
+        )
 
     @staticmethod
     @elementwise

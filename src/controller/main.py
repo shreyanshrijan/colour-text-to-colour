@@ -7,7 +7,7 @@ import tensorflow as tf
 from src.service import _create_training_data, _create_model, _sample_generate
 
 
-def train_model_end_to_end(model_name: str):
+def train_model_end_to_end(model_name: str, epochs: int):
     """Controller function to train the model and save it.
     """
 
@@ -28,8 +28,9 @@ def train_model_end_to_end(model_name: str):
             init_vals.append(np.array([0, 0, 0]))
 
     # train on the data
-    colour_prediction_model.fit(data_generated, steps_per_epoch=3200, epochs=200)
+    colour_prediction_model.fit(data_generated, steps_per_epoch=100, epochs=epochs)
 
+    print(text_vec.get_vocabulary())
     # Save the model
     pickle.dump(
         {
@@ -42,3 +43,7 @@ def train_model_end_to_end(model_name: str):
     )
     colour_prediction_model.save(f"{model_name}.h5")
     print("Model saved successfully")
+
+
+if __name__ == '__main__':
+    train_model_end_to_end("model testing")

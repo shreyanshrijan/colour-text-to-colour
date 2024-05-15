@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import json
 import pickle
 import keras
-from collections import ChainMap
-import pandas as pd
+import tensorflow as tf
 from functools import wraps
 
 from src.common.exceptions import NoModelFound
@@ -25,7 +23,7 @@ def elementwise(func):
     return wrapper
 
 
-@elementwise
+# @elementwise
 def predict_on_test_data(x_test: list, text_vector, model, y_mean, y_std):
 
     return model.predict(text_vector.call(x_test)) * y_std + y_mean
@@ -40,7 +38,7 @@ def predict(model_name: str, colour_name: str):
         from_disk = pickle.load(open(f"{model_name}_params.pkl", 'rb'))
 
     except NoModelFound:
-        print("Training a new model with the user input name")  # Bring lof=gging in the pipeline
+        print("Training a new model with the user input name")  # Bring logging in the pipeline
 
         train_model_end_to_end(model_name)
 
@@ -49,13 +47,28 @@ def predict(model_name: str, colour_name: str):
         # Load the text vector data from pickle file
         from_disk = pickle.load(open(f"{model_name}_params.pkl", 'rb'))
 
-    text_vector = keras.layers.TextVectorization.from_config(from_disk['config'])
+    text_vector = keras.layers.TextVectorization(
+        output_mode='int', output_sequence_length=from_disk['config']['output_sequence_length']
+    )
+
+    # text_vector = keras.layers.TextVectorization.from_config(from_disk['config'])
+    # You have to call `adapt` with some dummy data (BUG in Keras)
+    # text_vector.adapt(tf.data.Dataset.from_tensor_slices(["xyz"]))
     text_vector.set_weights(from_disk['weights'])
     y_mean = from_disk['y_mean']
     y_std = from_disk['y_std']
-
-    predicted_colour = predict_on_test_data(
-        [colour_name], text_vector, colour_prediction_model, y_mean, y_std
-    )
+    print(text_vector.get_vocabulary())
+    print(y_mean)
+    print(y_std)
+    # predicted_colour = predict_on_test_data(
+    #     [colour_name], text_vector, colour_prediction_model, y_mean, y_std
+    # )
+    predicted_colour = colour_prediction_model.predict(
+        text_vector.call([colour_name])
+    ) * y_std + y_mean
 
     return draw_color_palletes(predicted_colour.numpy())
+
+
+if __name__ == '__main__':
+    predict("model testing", "dark red")

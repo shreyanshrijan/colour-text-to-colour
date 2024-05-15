@@ -18,7 +18,7 @@ def plot_and_compare(x):
         b = df['predicted_LAB_code'].values
         dist = {}
         for element in range(len(a)):
-            dist[element] = np.linalg.norm(a[element]-b[element])
+            dist[element] = np.linalg.norm(a[element] - b[element])
         l2_norm.append(sum(dist.values()) / len(a))
         model_name.append(name)
 
