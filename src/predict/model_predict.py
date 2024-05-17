@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pickle
 import keras
-import tensorflow as tf
 from functools import wraps
 
 from src.common.exceptions import NoModelFound
 from src.controller.main import train_model_end_to_end
 from src.inference.test_performance import draw_color_palletes
+from src.service import _create_training_data
 
 def elementwise(func):
     @wraps(func)
@@ -31,11 +31,9 @@ def predict_on_test_data(x_test: list, text_vector, model, y_mean, y_std):
 
 def predict(model_name: str, colour_name: str):
 
+    X, y, P, text_vec, col_words, color_data = _create_training_data()
     try:
         colour_prediction_model = keras.models.load_model(f"{model_name}.h5")
-
-        # Load the text vector data from pickle file
-        from_disk = pickle.load(open(f"{model_name}_params.pkl", 'rb'))
 
     except NoModelFound:
         print("Training a new model with the user input name")  # Bring logging in the pipeline
@@ -44,28 +42,14 @@ def predict(model_name: str, colour_name: str):
 
         colour_prediction_model = keras.models.load_model(f"{model_name}.h5")
 
-        # Load the text vector data from pickle file
-        from_disk = pickle.load(open(f"{model_name}_params.pkl", 'rb'))
+    # Load the text vector data from pickle file
+    from_disk = pickle.load(open(f"{model_name}_params.pkl", 'rb'))
 
-    text_vector = keras.layers.TextVectorization(
-        output_mode='int', output_sequence_length=from_disk['config']['output_sequence_length']
-    )
-
-    # text_vector = keras.layers.TextVectorization.from_config(from_disk['config'])
-    # You have to call `adapt` with some dummy data (BUG in Keras)
-    # text_vector.adapt(tf.data.Dataset.from_tensor_slices(["xyz"]))
-    text_vector.set_weights(from_disk['weights'])
     y_mean = from_disk['y_mean']
     y_std = from_disk['y_std']
-    print(text_vector.get_vocabulary())
-    print(y_mean)
-    print(y_std)
-    # predicted_colour = predict_on_test_data(
-    #     [colour_name], text_vector, colour_prediction_model, y_mean, y_std
-    # )
-    predicted_colour = colour_prediction_model.predict(
-        text_vector.call([colour_name])
-    ) * y_std + y_mean
+
+    test_X = text_vec([colour_name])
+    predicted_colour = colour_prediction_model.predict(test_X * y_std + y_mean)
 
     return draw_color_palletes(predicted_colour.numpy())
 

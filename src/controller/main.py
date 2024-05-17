@@ -30,12 +30,9 @@ def train_model_end_to_end(model_name: str, epochs: int):
     # train on the data
     colour_prediction_model.fit(data_generated, steps_per_epoch=100, epochs=epochs)
 
-    print(text_vec.get_vocabulary())
     # Save the model
     pickle.dump(
         {
-            'config': text_vec.get_config(),
-            'weights': text_vec.get_weights(),
             'y_mean': y_mean,
             'y_std': y_std
         },
@@ -46,4 +43,4 @@ def train_model_end_to_end(model_name: str, epochs: int):
 
 
 if __name__ == '__main__':
-    train_model_end_to_end("model testing")
+    train_model_end_to_end("model testing", 10)
