@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pickle
 import keras
+import tensorflow as tf
 from functools import wraps
 
 from src.common.exceptions import NoModelFound
@@ -48,11 +49,12 @@ def predict(model_name: str, colour_name: str):
     y_mean = from_disk['y_mean']
     y_std = from_disk['y_std']
 
-    test_X = text_vec([colour_name])
-    predicted_colour = colour_prediction_model.predict(test_X * y_std + y_mean)
+    predicted_colour = colour_prediction_model.predict(text_vec.call([colour_name])) * y_std + y_mean
+    print("***************************************")
+    print(predicted_colour)
 
     return draw_color_palletes(predicted_colour.numpy())
 
 
 if __name__ == '__main__':
-    predict("model testing", "dark red")
+    predict("test_shreyan", "dark red")
