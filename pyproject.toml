@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "colour_text_to_colour"
+version = "0.1.0"
+description = "Colour text to colour prediction model"
+authors = ["Shreyan Shrijan <shreyanshrijan123@gmail.com>"]
+readme = "README.md"
+packages = [
+    {include = "src"},
+]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+pydantic = "^2.6.3"
+pandas = "^2.2.1"
+pydruid = "^0.6.6"
+sqlalchemy = "^2.0.28"
+hdfs = "^2.7.3"
+pyam = "^0.2.1a0"
+openpyxl = "^3.1.2"
+requests-kerberos = "^0.14.0"
+tenacity = "^8.2.3"
+keras = "^3.3.3"
+scikit-image = "^0.23.2"
+plotly = "^5.22.0"
+seaborn = "^0.13.2"
+tensorflow = "^2.16.1"
+fastapi = "^0.111.0"
+uvicorn = "^0.29.0"
+matplotlib = "^3.9.0"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
