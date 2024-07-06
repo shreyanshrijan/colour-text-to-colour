@@ -13,7 +13,7 @@ from src.utils import ColourConverter
 def _create_training_data():
     # Get the new word count with only the valid colors
     with open(
-        '/Users/4616164/Documents/ao_data/src/main/python/ao_modeling/universal_data.json'
+        '/Users/shreyanshrijan/Documents/colour-text-to-colour/src/train_test_data/universal_data.json'
     ) as f:
         data = f.read()
     data = json.loads(data)

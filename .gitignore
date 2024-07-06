@@ -11,3 +11,9 @@
 
 # misc
 *.ipynb
+
+# Build Artifacts
+**/__pycache__
+dist/
+tmp/
+**/.cache
