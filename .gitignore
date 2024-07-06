@@ -1,0 +1,13 @@
+
+# IDE
+**/.vscode/
+**/127.0.0.1/
+.idea
+.run
+
+# Virtual Environment
+.venv/
+.python-version
+
+# misc
+*.ipynb
