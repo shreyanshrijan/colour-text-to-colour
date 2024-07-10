@@ -4,7 +4,10 @@ import pickle
 import numpy as np
 import tensorflow as tf
 
-from src.service import _create_training_data, _create_model, _sample_generate
+from src.service import (
+    _create_training_data, vectorize_words, _create_model,
+    _create_model_with_Word2Vec, _sample_generate
+)
 
 
 def train_model_end_to_end(model_name: str, epochs: int):
@@ -42,5 +45,31 @@ def train_model_end_to_end(model_name: str, epochs: int):
     print("Model saved successfully")
 
 
+def train_model_end_to_end_with_Word2Vec(model_name: str, epochs: int):
+    """Train end to end model using Word2Vec for embedding the words and then using GRU to learn
+    the patterns.
+    """
+    X, y, P, word2vec_model = vectorize_words()
+
+    colour_prediction_model = _create_model_with_Word2Vec()
+
+    y_mean = np.mean(y, axis=0)
+    y_std = np.std(y, axis=0)
+    data_generated = _sample_generate(X, y, y_mean, y_std, P)
+
+    colour_prediction_model.fit(data_generated, steps_per_epoch=100, epochs=epochs)
+
+    # pickle.dump(
+    #     {
+    #         'y_mean': y_mean,
+    #         'y_std': y_std
+    #     },
+    #     open(f"{model_name}_params_with_word2vec.pkl", 'wb')
+    # )
+    colour_prediction_model.save(f"{model_name}_with_word2vec.h5")
+    word2vec_model.save("word2vec_model.model")
+    print("Model saved successfully")
+
+
 if __name__ == '__main__':
-    train_model_end_to_end("model testing", 10)
+    train_model_end_to_end_with_Word2Vec("model testing", 10)
