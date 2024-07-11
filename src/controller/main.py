@@ -51,13 +51,13 @@ def train_model_end_to_end_with_Word2Vec(model_name: str, epochs: int):
     """
     X, y, P, word2vec_model = vectorize_words()
 
-    colour_prediction_model = _create_model_with_Word2Vec()
+    colour_prediction_model_with_word2vec = _create_model_with_Word2Vec()
 
     y_mean = np.mean(y, axis=0)
     y_std = np.std(y, axis=0)
     data_generated = _sample_generate(X, y, y_mean, y_std, P)
 
-    colour_prediction_model.fit(data_generated, steps_per_epoch=100, epochs=epochs)
+    colour_prediction_model_with_word2vec.fit(data_generated, steps_per_epoch=100, epochs=epochs)
 
     # pickle.dump(
     #     {
@@ -66,7 +66,7 @@ def train_model_end_to_end_with_Word2Vec(model_name: str, epochs: int):
     #     },
     #     open(f"{model_name}_params_with_word2vec.pkl", 'wb')
     # )
-    colour_prediction_model.save(f"{model_name}_with_word2vec.h5")
+    colour_prediction_model_with_word2vec.save(f"{model_name}_with_word2vec.h5")
     word2vec_model.save("word2vec_model.model")
     print("Model saved successfully")
 

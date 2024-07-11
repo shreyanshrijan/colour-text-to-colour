@@ -27,10 +27,11 @@ def _create_model(vocabulary_size) -> keras.Model:
     return colour_prediction_model
 
 
-def _create_model_with_Word2Vec() -> keras.Model:
+def _create_model_with_Word2Vec():
 
+    inputs = keras.Input(shape=(6, 5))
     colour_prediction_model = keras.models.Sequential([
-        keras.layers.Masking(mask_value=0.0, input_shape=(6, 5)),
+        inputs,
         keras.layers.GRU(
             128, return_sequences=True, activation='tanh'
         ),
@@ -47,5 +48,6 @@ def _create_model_with_Word2Vec() -> keras.Model:
         optimizer=keras.optimizers.legacy.Adam(learning_rate=0.01),
         loss='mean_squared_error'
     )
+    print(colour_prediction_model.summary())
 
     return colour_prediction_model

@@ -89,8 +89,8 @@ def _sample_generate(X, y, y_mean, y_std, P, batch_size=32):
                 (valid_i, P[sel_ii] > np.random.rand(batch_size * 4))
             )
 
-        x_batch = tf.gather(X, indices=sel_i[valid_i])[:batch_size]
-        y_batch = tf.gather(y, indices=sel_i[valid_i])[:batch_size]
+        x_batch = X[sel_i[valid_i][:batch_size]]
+        y_batch = y[sel_i[valid_i][:batch_size]]
 
         # if augment:
         #     y_batch += np.random.randn(y_batch.shape[0],y_batch.shape[1]) * 0.5
