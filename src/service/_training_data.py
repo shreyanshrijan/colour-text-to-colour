@@ -18,7 +18,7 @@ tf.compat.v1.disable_eager_execution()
 def _create_training_data():
     # Get the new word count with only the valid colors
     with open(
-        '/Users/shreyanshrijan/Documents/colour-text-to-colour/src/train_test_data/universal_data.json'
+        '/Users/shreyanshrijan/Documents/colour-text-to-colour/src/train_test_data/universal_data.json'  # noqa
     ) as f:
         data = f.read()
     data = json.loads(data)
@@ -76,7 +76,7 @@ def _create_training_data():
     return X, y, train_prob, text_vec, col_words, color_data
 
 
-def _sample_generate(X, y, y_mean, y_std, P, batch_size=32):
+def _sample_generate(X, y, y_mean, y_std, P, batch_size=500):
 
     while True:
         sel_i = np.random.randint(0, X.shape[0], batch_size * 4)
@@ -108,13 +108,11 @@ def strip_accents(text):
     return str(text)
 
 
-
-
 ###################################################################################################
 # First Pass in creating Word2Vec
 def vectorize_words():
     with open(
-        '/Users/shreyanshrijan/Documents/colour-text-to-colour/src/train_test_data/universal_data.json'
+        '/Users/shreyanshrijan/Documents/colour-text-to-colour/src/train_test_data/universal_data.json'  # noqa
     ) as f:
         data = f.read()
     data = json.loads(data)
@@ -143,15 +141,26 @@ def vectorize_words():
         col_words.update(w for w in color_i.split() if w not in stop_words)
 
     tokenized_sentences = [sentence.lower().split() for sentence in list(color_data.keys())]
-    word2vec_model = Word2Vec(sentences=tokenized_sentences, vector_size=5, window=3, min_count=1, workers=4)
+    word2vec_model = Word2Vec(
+        sentences=tokenized_sentences,
+        vector_size=50,
+        window=3,
+        min_count=1,
+        workers=4
+    )
 
     def sentence_to_embedding(sentence, model):
         return np.array([model.wv[word] for word in sentence if word in model.wv])
 
-    embedded_sentences = [sentence_to_embedding(sentence, word2vec_model) for sentence in tokenized_sentences]
+    embedded_sentences = [
+        sentence_to_embedding(sentence, word2vec_model) for sentence in tokenized_sentences
+    ]
 
-    max_length = max(len(sentence) for sentence in embedded_sentences)
-    padded_sentences = pad_sequences(embedded_sentences, maxlen=max_length, dtype='float32', padding='post', value=0.0)
+    # max_length = max(len(sentence) for sentence in embedded_sentences)
+    max_length = 5
+    padded_sentences = pad_sequences(
+        embedded_sentences, maxlen=max_length, dtype='float32', padding='post', value=0.0
+    )
 
     y = np.array([v for k, v in color_data.items()])
 

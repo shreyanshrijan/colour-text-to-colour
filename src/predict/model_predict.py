@@ -63,14 +63,18 @@ def predict(model_name: str, colour_name: str):
 def predict_word2vec_model(model_name: str, colour_name: list[str]):
 
     try:
-        colour_prediction_model: keras.Model = keras.models.load_model(f"{model_name}_with_word2vec.h5")
+        colour_prediction_model: keras.Model = keras.models.load_model(
+            f"{model_name}_with_word2vec.h5"
+        )
 
     except NoModelFound:
         print("Training a new model with the user input name")  # Bring logging in the pipeline
 
         train_model_end_to_end_with_Word2Vec(model_name, 10)
 
-        colour_prediction_model: keras.Model = keras.models.load_model(f"{model_name}_with_word2vec.h5")
+        colour_prediction_model: keras.Model = keras.models.load_model(
+            f"{model_name}_with_word2vec.h5"
+        )
 
     word2vec_model: Word2Vec = Word2Vec.load("word2vec_model.model")
     tokenized_sentences = [sentence.lower().split() for sentence in colour_name]
@@ -78,14 +82,23 @@ def predict_word2vec_model(model_name: str, colour_name: list[str]):
     def sentence_to_embedding(sentence, model: Word2Vec):
         return np.array([model.wv[word] for word in sentence if word in model.wv])
 
-    embedded_sentences = [sentence_to_embedding(sentence, word2vec_model) for sentence in tokenized_sentences]
+    embedded_sentences = [
+        sentence_to_embedding(sentence, word2vec_model) for sentence in tokenized_sentences
+    ]
 
-    max_length = max(len(sentence) for sentence in embedded_sentences)
-    padded_sentences = pad_sequences(embedded_sentences, maxlen=6, dtype='float32', padding='post', value=0.0)
+    padded_sentences = pad_sequences(
+        embedded_sentences, maxlen=5, dtype='float32', padding='post', value=0.0
+    )
+
+    # Load the text vector data from pickle file
+    from_disk = pickle.load(open(f"{model_name}_params_with_word2vec.pkl", 'rb'))
+
+    y_mean = from_disk['y_mean']
+    y_std = from_disk['y_std']
 
     predicted_colour = colour_prediction_model.predict(
         padded_sentences
-    )
+    ) * y_std + y_mean
     print("***************************************")
     print(predicted_colour)
 
@@ -94,4 +107,4 @@ def predict_word2vec_model(model_name: str, colour_name: list[str]):
 
 if __name__ == '__main__':
     # predict("test_shreyan", "dark red")
-    print(predict_word2vec_model("model testing", ["very dark red"]))
+    print(predict_word2vec_model("model_testing", ["light green"]))

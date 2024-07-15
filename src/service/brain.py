@@ -29,7 +29,7 @@ def _create_model(vocabulary_size) -> keras.Model:
 
 def _create_model_with_Word2Vec():
 
-    inputs = keras.Input(shape=(6, 5))
+    inputs = keras.Input(shape=(5, 50))
     colour_prediction_model = keras.models.Sequential([
         inputs,
         keras.layers.GRU(
@@ -45,7 +45,7 @@ def _create_model_with_Word2Vec():
     ])
 
     colour_prediction_model.compile(
-        optimizer=keras.optimizers.legacy.Adam(learning_rate=0.01),
+        optimizer=keras.optimizers.legacy.Adam(learning_rate=0.001),
         loss='mean_squared_error'
     )
     print(colour_prediction_model.summary())
