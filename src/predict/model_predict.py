@@ -54,8 +54,6 @@ def predict(model_name: str, colour_name: str):
     predicted_colour = colour_prediction_model.predict(
         text_vec.call([colour_name])
     ) * y_std + y_mean
-    print("***************************************")
-    print(predicted_colour)
 
     return draw_color_palletes(predicted_colour.numpy())
 
@@ -102,7 +100,7 @@ def predict_word2vec_model(model_name: str, colour_name: list[str]):
     print("***************************************")
     print(predicted_colour)
 
-    return draw_color_palletes(predicted_colour)
+    return draw_color_palletes(predicted_colour), predicted_colour
 
 
 if __name__ == '__main__':

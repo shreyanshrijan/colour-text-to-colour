@@ -4,7 +4,7 @@ from fastapi import APIRouter, Response, BackgroundTasks
 
 from src.api.dto.request import ModelTraining, ModelInference
 from src.controller.main import train_model_end_to_end
-from src.predict.model_predict import predict
+from src.predict.model_predict import predict, predict_word2vec_model
 
 
 routers = APIRouter(
@@ -26,5 +26,5 @@ def model_training(request: ModelTraining):  # Add the response as well
 
 @routers.post("/model_inference")
 def model_prediction(request: ModelInference):
-    img_buf = predict(request.colour_model_id, request.colour_name)
+    img_buf, _ = predict_word2vec_model(request.colour_model_id, request.colour_name)
     return Response(img_buf.getvalue(), media_type='image/png')
